@@ -24,6 +24,7 @@ from dojo.tools.skf.parser import SKFCsvParser
 from dojo.tools.ssllabs.parser import SSLlabsParser
 from dojo.tools.nikto.parser import NiktoXMLParser
 from dojo.tools.trufflehog.parser import TruffleHogJSONParser
+from dojo.tools.kubebench.parser import KubebenchJSONParser
 
 __author__ = 'Jay Paz'
 
@@ -89,6 +90,8 @@ def import_parser_factory(file, test, scan_type=None):
         parser = GosecScannerParser(file, test)
     elif scan_type == 'Trustwave Scan (CSV)':
         parser = TrustwaveUploadCsvParser(file, test)
+    elif scan_type == 'Kube-bench Scan':
+        parser = KubebenchJSONParser(file, test)
     else:
         raise ValueError('Unknown Test Type')
 
