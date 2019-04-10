@@ -248,8 +248,7 @@ class ImportScanForm(forms.Form):
                          ("SKF Scan", "SKF Scan"),
                          ("Bandit Scan", "Bandit Scan"),
                          ("SSL Labs Scan", "SSL Labs Scan"),
-                         ("Gosec Scanner", "Gosec Scanner"),
-                         ("Kube-bench Scan", "Kube-bench Scan"))
+                         ("Gosec Scanner", "Gosec Scanner"))
 
     SORTED_SCAN_TYPE_CHOICES = sorted(SCAN_TYPE_CHOICES, key=lambda x: x[1])
 
