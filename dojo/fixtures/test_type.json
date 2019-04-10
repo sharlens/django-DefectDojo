@@ -286,10 +286,73 @@
     "pk": 41
   },
   {
-      "fields": {
-        "name": "Netsparker Scanner"
-      },
-      "model": "dojo.test_type",
-      "pk": 49
+    "fields": {
+      "name": "Qualys Web App Scan"
+    },
+    "model": "dojo.test_type",
+    "pk": 22
+  },
+  {
+    "fields": {
+      "name": "Retire.js Scan"
+    },
+    "model": "dojo.test_type",
+    "pk": 23
+  },
+  {
+    "fields": {
+      "name": "SKF Scan"
+    },
+    "model": "dojo.test_type",
+    "pk": 24
+  },
+  {
+    "fields": {
+      "name": "Snyk Scan"
+    },
+    "model": "dojo.test_type",
+    "pk": 25
+  },
+  {
+    "fields": {
+      "name": "Trustwave"
+    },
+    "model": "dojo.test_type",
+    "pk": 27
+  },
+  {
+    "fields": {
+      "name": "VCG Scan"
+    },
+    "model": "dojo.test_type",
+    "pk": 28
+  },
+  {
+    "fields": {
+      "name": "Manual Code Review"
+    },
+    "model": "dojo.test_type",
+    "pk": 29
+  },
+  {
+    "fields": {
+	"name": "Gosec Scanner"
+    },
+    "model": "dojo.test_type",
+    "pk": 30
+  },
+  {
+    "fields": {
+    "name": "Kube-bench Scanner"
+    },
+    "model": "dojo.test_type",
+    "pk":31
+  },
+  {
+    "fields": {
+    "name": "Netsparker Scanner"
+    },
+    "model": "dojo.test_type",
+    "pk": 49
   }
 ]

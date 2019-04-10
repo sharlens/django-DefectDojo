@@ -267,6 +267,8 @@ class ImportScanForm(forms.Form):
                          ("Clair Klar Scan", "Clair Klar Scan"),
                          ("Bandit Scan", "Bandit Scan"),
                          ("SSL Labs Scan", "SSL Labs Scan"),
+                         ("Gosec Scanner", "Gosec Scanner"),
+                         ("Kube-bench Scan", "Kube-bench Scan"))
                          ("Acunetix Scan", "Acunetix Scan"),
                          ("Fortify Scan", "Fortify Scan"),
                          ("Gosec Scanner", "Gosec Scanner"),
