@@ -34,7 +34,7 @@ from dojo.models import Product_Type, Finding, Notes, \
     FindingImageAccessToken, JIRA_Issue, JIRA_PKey, Dojo_User, Cred_Mapping, Test, Product, User
 from dojo.utils import get_page_items, add_breadcrumb, FileIterWrapper, process_notifications, \
     add_comment, jira_get_resolution_id, jira_change_resolution_id, get_jira_connection, \
-    get_system_setting, create_notification, apply_cwe_to_template, Product_Tab, calculate_grade
+    get_system_setting, create_notification, apply_cwe_to_template, Product_Tab, calculate_grade, log_jira_alert
 
 from dojo.tasks import add_issue_task, update_issue_task, add_comment_task
 from django.template.defaultfilters import pluralize
@@ -518,16 +518,14 @@ def edit_finding(request, fid):
                 jform = JIRAFindingForm(
                     request.POST, prefix='jiraform', enabled=enabled)
                 if jform.is_valid():
-                    try:
-                        # jissue = JIRA_Issue.objects.get(finding=new_finding)
+                    if JIRA_Issue.objects.filter(finding=new_finding).exists():
                         update_issue_task.delay(
                             new_finding, old_status,
                             jform.cleaned_data.get('push_to_jira'))
-                    except:
+                    else:
                         add_issue_task.delay(
                             new_finding,
                             jform.cleaned_data.get('push_to_jira'))
-                        pass
             tags = request.POST.getlist('tags')
             t = ", ".join(tags)
             new_finding.tags = t
@@ -836,22 +834,6 @@ def apply_template_to_finding(request, fid, tid):
     else:
         return HttpResponseRedirect(
             reverse('view_finding', args=(finding.id, )))
-
-
-@user_passes_test(lambda u: u.is_staff)
-def delete_finding_note(request, tid, nid):
-    note = get_object_or_404(Notes, id=nid)
-    if note.author == request.user:
-        finding = get_object_or_404(Finding, id=tid)
-        finding.notes.remove(note)
-        note.delete()
-        messages.add_message(
-            request,
-            messages.SUCCESS,
-            'Note removed.',
-            extra_tags='alert-success')
-        return view_finding(request, tid)
-    return HttpResponseForbidden()
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -1488,6 +1470,17 @@ def finding_bulk_update_all(request, pid=None):
                         if prev_prod != finding.test.engagement.product.id:
                             calculate_grade(finding.test.engagement.product)
                             prev_prod = finding.test.engagement.product.id
+
+                for finding in finds:
+                    if JIRA_PKey.objects.filter(product=finding.test.engagement.product).count() == 0:
+                        log_jira_alert('Finding cannot be pushed to jira as there is no jira configuration for this product.', finding)
+                    else:
+                        old_status = finding.status()
+                        if form.cleaned_data['push_to_jira']:
+                            if JIRA_Issue.objects.filter(finding=finding).exists():
+                                update_issue_task.delay(finding, old_status, True)
+                            else:
+                                add_issue_task.delay(finding, True)
 
                 messages.add_message(request,
                                      messages.SUCCESS,
